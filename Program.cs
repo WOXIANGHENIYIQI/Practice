@@ -1,16 +1,11 @@
 ﻿using Magicodes.ExporterAndImporter.Core;
 using Magicodes.ExporterAndImporter.Excel;
-using Nito.AsyncEx;
-using OfficeOpenXml;
-using OfficeOpenXml.Table;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Practice
@@ -19,39 +14,10 @@ namespace Practice
     {
         static void Main(string[] args)
         {
-            #region lock 同步锁
-            //Thread[] threads = new Thread[100];
-            //Program acc = new Program(10);
-            //for (int i = 0; i < threads.Length; i++)
-            //{
-            //    Thread t = new Thread(new ThreadStart(acc.DoTransactions));
-            //    threads[i] = t;
-            //}
-            //for (int i = 0; i < threads.Length; i++)
-            //{
-            //    threads[i].Start();
-            //}
-            #endregion
-            #region AsyncLock 异步锁
-            //Program acc = new Program(100);//通过构造函数给变量赋值，相当于100红包
-            //Thread[] threads = new Thread[100];//创建100个线程模拟100人抢100元红包
-            //for (int i = 0; i < threads.Length; i++)
-            //{
-            //    Thread t = new Thread(() =>
-            //    {
-            //        DoTransactions("线程" + i + ":").Wait();
-            //    });
-            //    threads[i] = t;
-            //}
-            //for (int i = 0; i < threads.Length; i++)//开启线程
-            //{
-            //    threads[i].Start();
-            //}
-            #endregion
-            #region 事务
-            //Method1();
-            //Method2();
-            #endregion
+
+            //Console.WriteLine(new EncryptionAndDecryption().SHA("Bsi2019"));
+            //Console.WriteLine(da);
+
             #region Log编辑记录
             //Data data1 = new Data { Id = 3, Name = "关羽", Age = 20, Set = 1 };//新值
             //Data data2 = new Data { Id = 3, Name = "张飞", Age = 25, Set = 0 };//旧值 
@@ -134,168 +100,64 @@ namespace Practice
 
             #endregion
             #region DataTable动态导出
-            List<Tescx> tescx = new List<Tescx>()
-           {
-               new Tescx{ Name="名称",CodeName="Name",CName="名称" },
-               new Tescx{ Name="年龄",CodeName="Age",CName="年龄" }
-           };
-            List<string> Template = new List<string>();
-            List<string> basic = new List<string>();
-            //获取表头
-            Type type = typeof(Tesc);
-            PropertyInfo[] pis = type.GetProperties();
-            foreach (var item in pis)
-            {
-                basic.Add(item.Name);
-            }
-            foreach (var item in tescx)
-            {
-                Template.Add(item.CodeName);
-            }
-            //交集 要导出Excel的表头
-            var list = basic.Intersect(Template).ToList();
-            DataTable dt = new DataTable();
-            //创建列并设置列名
-            foreach (var item in list)
-            {
-                var da= tescx.Find(a => a.CodeName == item);
-                dt.Columns.Add(da.Name);
-            }
-            //数据添加到DataTable
-            foreach (var item in tescs)
-            {
-                List<string> rows = new List<string>();
-                Type types = item.GetType();
-                PropertyInfo[] piss = type.GetProperties();
-                foreach (var it in piss)
-                {
-                    foreach (var im in list)
-                    {
-                        if (it.Name == im)
-                        {
-                            rows.Add(it.GetValue(item).ToString());
-                        }
-                    }
-                }
-                DataRow dataRow = dt.NewRow();
-                for (int i = 0; i < rows.Count; i++)
-                {
+           // List<Tescx> tescx = new List<Tescx>()
+           //{
+           //    new Tescx{ Name="名称",CodeName="Name",CName="名称" },
+           //    new Tescx{ Name="年龄",CodeName="Age",CName="年龄" }
+           //};
+           // List<string> Template = new List<string>();
+           // List<string> basic = new List<string>();
+           // //获取表头
+           // Type type = typeof(Tesc);
+           // PropertyInfo[] pis = type.GetProperties();
+           // foreach (var item in pis)
+           // {
+           //     basic.Add(item.Name);
+           // }
+           // foreach (var item in tescx)
+           // {
+           //     Template.Add(item.CodeName);
+           // }
+           // //交集 要导出Excel的表头
+           // var list = basic.Intersect(Template).ToList();
+           // DataTable dt = new DataTable();
+           // //创建列并设置列名
+           // foreach (var item in list)
+           // {
+           //     var da= tescx.Find(a => a.CodeName == item);
+           //     dt.Columns.Add(da.Name);
+           // }
+           // //数据添加到DataTable
+           // foreach (var item in tescs)
+           // {
+           //     List<string> rows = new List<string>();
+           //     Type types = item.GetType();
+           //     PropertyInfo[] piss = type.GetProperties();
+           //     foreach (var it in piss)
+           //     {
+           //         foreach (var im in list)
+           //         {
+           //             if (it.Name == im)
+           //             {
+           //                 rows.Add(it.GetValue(item).ToString());
+           //             }
+           //         }
+           //     }
+           //     DataRow dataRow = dt.NewRow();
+           //     for (int i = 0; i < rows.Count; i++)
+           //     {
                     
-                    dataRow[i] = rows[i];
-                }
-                dt.Rows.Add(dataRow);
-            }
-            var filePaths = Path.Combine(Directory.GetCurrentDirectory(), "DataTable动态导出测试.xlsx");
-            IExporter exporter = new ExcelExporter();
-            exporter.Export<DataTable>(filePaths, dt).Wait();
+           //         dataRow[i] = rows[i];
+           //     }
+           //     dt.Rows.Add(dataRow);
+           // }
+           // var filePaths = Path.Combine(Directory.GetCurrentDirectory(), "DataTable动态导出测试.xlsx");
+           // IExporter exporter = new ExcelExporter();
+           // exporter.Export<DataTable>(filePaths, dt).Wait();
             #endregion
             Console.Read();
         }
-        #region lock 同步锁
-        //int balance;
-        //Random r = new Random();
-        //public Program(int initial)
-        //{
-        //    balance = initial;
-        //}
 
-        //void Withdraw(int amount)
-        //{
-        //    lock (this)
-        //    {
-        //        if (balance == 0)
-        //        {
-        //            Console.WriteLine("以抢完！");
-        //            throw new Exception("以抢完!");
-        //        }
-        //        else
-        //        {
-        //            Console.WriteLine("抢之前:  " + balance);
-        //            Console.WriteLine("抢到数据: -" + amount);
-        //            balance = balance - amount;
-        //            Console.WriteLine("抢之后:  " + balance);
-        //            Console.WriteLine();
-        //        }
-
-        //    }
-        //}
-
-        //public void DoTransactions()
-        //{
-        //    for (int i = 0; i < 1; i++)
-        //    {
-        //        Withdraw(1);
-        //    }
-        //}
-        #endregion
-        #region AsyncLock 异步锁
-        //static int balance;
-
-        //public Program(int initial)
-        //{
-        //    balance = initial;
-        //}
-        //public static AsyncLock asyncLock = new AsyncLock();
-        //public static async Task<string> Withdraw(string name, int amount)
-        //{
-        //    using (await asyncLock.LockAsync())
-        //    {
-        //        if (balance <= 0)
-        //        {
-        //            Console.WriteLine(name + "没有抢到红包已经抢完！");
-        //        }
-        //        else
-        //        {
-        //            if (balance< amount)
-        //            {
-        //                amount = balance;
-        //                balance = 0;
-        //                Console.WriteLine(name + "抢到" + amount + "元，红包剩余:" + balance);
-        //            }
-        //            else
-        //            {
-        //                balance = balance - amount;
-        //                Console.WriteLine(name + "抢到" + amount + "元，红包剩余:" + balance);
-        //            }
-
-        //        }
-        //        return  "";
-        //   }
-
-        //}
-        //public static async Task<string> DoTransactions(string name)
-        //{
-        //    Random r = new Random();
-        //    int a = r.Next(1, 10);
-        //    await Withdraw(name, a);
-        //    return "";
-        //}
-        #endregion
-        #region 事务
-        ///// <summary>
-        ///// 这个Attribute就是使用时候的验证，把它添加到需要执行事务的方法中，即可完成事务的操作。
-        ///// </summary>
-        //[AttributeUsage(AttributeTargets.Method, Inherited = true)]
-        //public class UseTranAttribute : Attribute
-        //{
-
-        //}
-
-
-        //public static int Method1()
-        //{
-        //    //写个新增
-        //    return 0;
-
-        //}
-        //[UseTran]
-        //public static int Method2()
-        //{
-        //    //写个新增
-        //    return 0;
-        //    throw new Exception("出现异常");
-        //}
-        #endregion
         #region Log编辑记录
         //public class Data
         //{
@@ -316,11 +178,84 @@ namespace Practice
         //    /// <returns></returns>
         //    public List<EditRecord> DataComparison(object Newvalue, object Oldvalue, int Id, int UserId)
         //    {
-        //        Type type = Newvalue.GetType();
-        //        PropertyInfo[] pis = type.GetProperties();
-        //        Type type1 = Oldvalue.GetType();
-        //        PropertyInfo[] pis1 = type1.GetProperties();
+        //        PropertyInfo[] pis = Newvalue.GetType().GetProperties();
+        //        PropertyInfo[] pis1 = Oldvalue.GetType().GetProperties();
         //        List<EditRecord> logs = new List<EditRecord>();
+        //        for (int i = 0; i < pis.Length; i++)
+        //        {
+        //            for (int j = 0; j < pis1.Length; j++)
+        //            {
+        //                if (pis[i].Name == pis1[j].Name)
+        //                {
+        //                    if (pis[i].GetValue(Newvalue) is not null && pis1[j].GetValue(Oldvalue) is not null)
+        //                    {
+        //                        if (pis[i].GetValue(Newvalue).ToString() != pis1[j].GetValue(Oldvalue).ToString())
+        //                        {
+        //                            EditRecord log = new EditRecord();
+        //                            log.Newvalue = pis[i].GetValue(Newvalue).ToString();
+        //                            log.Oldvalue = pis1[j].GetValue(Oldvalue).ToString();
+        //                            log.EditTime = DateTime.Now;
+        //                            log.UserId = UserId;
+        //                            log.EditItem = pis[i].Name;
+        //                            log.Id = Id;
+        //                            logs.Add(log);
+        //                        }
+        //                    }
+        //                    else if (pis[i].GetValue(Newvalue) is null && pis1[j].GetValue(Oldvalue) is null)
+        //                    {
+        //                        continue;
+        //                    }
+        //                    else if (pis[i].GetValue(Newvalue) is null && pis1[j].GetValue(Oldvalue) is not null)
+        //                    {
+        //                        EditRecord log = new EditRecord();
+        //                        log.Newvalue = "/";
+        //                        log.Oldvalue = pis1[j].GetValue(Oldvalue).ToString();
+        //                        log.EditTime = DateTime.Now;
+        //                        log.UserId = UserId;
+        //                        log.EditItem = pis[i].Name;
+        //                        log.Id = Id;
+        //                        logs.Add(log);
+        //                    }
+        //                    else if (pis[i].GetValue(Newvalue) is not null && pis1[j].GetValue(Oldvalue) is null)
+        //                    {
+        //                        EditRecord log = new EditRecord();
+        //                        log.Newvalue = pis[i].GetValue(Newvalue).ToString();
+        //                        log.Oldvalue = "/";
+        //                        log.EditTime = DateTime.Now;
+        //                        log.UserId = UserId;
+        //                        log.EditItem = pis[i].Name;
+        //                        log.Id = Id;
+        //                        logs.Add(log);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        return logs;
+        //    }
+
+        //    /// <summary>
+        //    /// 编辑数据对比
+        //    /// </summary>
+        //    /// <param name="Newvalue">新值</param>
+        //    /// <param name="Oldvalue">旧址</param>
+        //    /// <param name="Id"></param>
+        //    /// <param name="UserId"></param>
+        //    /// <returns></returns>
+        //    public List<EditRecord> ToDataComparison(object Newvalue, object Oldvalue, int Id, int UserId)
+        //    {
+        //        PropertyInfo[] pis = Newvalue.GetType().GetProperties();
+        //        PropertyInfo[] pis1 = Oldvalue.GetType().GetProperties();
+        //        List<EditRecord> logs = new List<EditRecord>();
+        //        foreach (var item in Newvalue.GetType().GetProperties())
+        //        {
+        //            foreach (var it in Oldvalue.GetType().GetProperties())
+        //            {
+        //                if (item.Name == it.Name)
+        //                {
+
+        //                }
+        //            }
+        //        }
         //        for (int i = 0; i < pis.Length; i++)
         //        {
         //            for (int j = 0; j < pis1.Length; j++)
@@ -405,20 +340,20 @@ namespace Practice
         //}
         #endregion
         #region 模板导入导出
-        ////导出
-        //[ExcelExporter(Name = "订单导入模板", TableStyle = TableStyles.Dark4, AutoFitAllColumn = true, MaxRowNumberOnASheet = 100)]
-        public class Tesc
-        {
-            //[ExporterHeader(DisplayName = "Id")]
-            // [Required(ErrorMessage = "Id不能为空")]
-            public int Id { get; set; }
-            //[ExporterHeader(DisplayName = "名称")]
-            //[Required(ErrorMessage = "名称不能为空")]
-            public string Name { get; set; }
-            //  [ExporterHeader(DisplayName = "年龄")]
-            //  [Required(ErrorMessage = "年龄不能为空")]
-            public int Age { get; set; }
-        }
+        //////导出
+        ////[ExcelExporter(Name = "订单导入模板", TableStyle = TableStyles.Dark4, AutoFitAllColumn = true, MaxRowNumberOnASheet = 100)]
+        //public class Tesc
+        //{
+        //    //[ExporterHeader(DisplayName = "Id")]
+        //    // [Required(ErrorMessage = "Id不能为空")]
+        //    public int Id { get; set; }
+        //    //[ExporterHeader(DisplayName = "名称")]
+        //    //[Required(ErrorMessage = "名称不能为空")]
+        //    public string Name { get; set; }
+        //    //  [ExporterHeader(DisplayName = "年龄")]
+        //    //  [Required(ErrorMessage = "年龄不能为空")]
+        //    public int Age { get; set; }
+        //}
 
         ////导入
         //[ExcelImporter(IsLabelingError = true)]
